@@ -12,13 +12,18 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-    def list(self, request, *args, **kwargs):
-        self.serializer_class = RetrieveUserSerializer
-        return super().list(request, *args, **kwargs)
+    def get_serializer_class(self):
+        if self.action in ("list", "retrieve"):
+            return RetrieveUserSerializer
+        return UserSerializer
 
-    def retrieve(self, request, *args, **kwargs):
-        self.serializer_class = RetrieveUserSerializer
-        return super().retrieve(request, *args, **kwargs)
+    # def list(self, request, *args, **kwargs):
+    #     self.serializer_class = RetrieveUserSerializer
+    #     return super().list(request, *args, **kwargs)
+    #
+    # def retrieve(self, request, *args, **kwargs):
+    #     self.serializer_class = RetrieveUserSerializer
+    #     return super().retrieve(request, *args, **kwargs)
 
 
 # Payments
