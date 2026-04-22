@@ -1,7 +1,7 @@
 from rest_framework import generics, viewsets
 
 from .models import User, Payments
-from .serializers import UserSerializer, PaymentsSerializer
+from .serializers import UserSerializer, PaymentsSerializer, RetrieveUserSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
 
@@ -11,6 +11,14 @@ class UserViewSet(viewsets.ModelViewSet):
     """Класс описывающий логику обработки HTTP запросов"""
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+    def list(self, request, *args, **kwargs):
+        self.serializer_class = RetrieveUserSerializer
+        return super().list(request, *args, **kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        self.serializer_class = RetrieveUserSerializer
+        return super().retrieve(request, *args, **kwargs)
 
 
 # Payments
@@ -33,15 +41,3 @@ class PaymentsRetrieveViewAPI(generics.RetrieveAPIView):
     """Класс отвечает за отображение одной сущности (Платёж)"""
     serializer_class = PaymentsSerializer
     queryset = Payments.objects.all()
-
-
-# class UserUpdateViewAPI(generics.UpdateAPIView):
-#     """Класс отвечает за редактирование одной сущности (Урока)"""
-#     serializer_class = UserSerializer
-#     queryset = User.objects.all()
-#
-#
-# class UserDestroyViewAPI(generics.DestroyAPIView):
-#     """Класс отвечает за удаление сущности (Урока)"""
-#     serializer_class = UserSerializer
-#     queryset = User.objects.all()

@@ -17,3 +17,13 @@ class PaymentsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payments
         fields = "__all__"
+
+
+class RetrieveUserSerializer(serializers.ModelSerializer):
+    """Сериализаторы определяющий представление API"""
+
+    payments = PaymentsSerializer(many=True)
+
+    class Meta:
+        model = User
+        fields = ("id", "first_name", "last_name", "email", "phone_number", "city", "payments",)
