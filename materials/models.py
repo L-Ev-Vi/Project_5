@@ -1,0 +1,43 @@
+from django.db import models
+
+
+class Lesson(models.Model):
+    """Класс определяющий модель 'Урока'"""
+
+    title = models.CharField(max_length=200, verbose_name="Название Урока")
+    description = models.TextField(blank=True, null=True, verbose_name="Описание")
+    picture = models.ImageField(upload_to="picture/", blank=True, null=True, verbose_name="Превью")
+    link_to_video = models.URLField(max_length=500, null=True, blank=True, verbose_name="Ссылка на видео")
+
+    def __str__(self) -> str:
+        """Метод определяет строковое представление объекта."""
+        return f"{self.title}"
+
+    class Meta:
+        """Клас который добавляет метаданные к модели Lesson."""
+
+        verbose_name = "Урок"
+        verbose_name_plural = "Уроки"
+        ordering = ["title"]
+        db_table = "lessons"
+
+
+class Course(models.Model):
+    """Класс определяющий модель 'Курса'"""
+
+    title = models.CharField(max_length=100, verbose_name="Название курса")
+    picture = models.ImageField(upload_to="picture/", blank=True, null=True, verbose_name="Превью")
+    description = models.TextField(blank=True, null=True, verbose_name="Описание")
+    lesson = models.ManyToManyField(Lesson, related_name="lessons", verbose_name="Уроки")
+
+    def __str__(self) -> str:
+        """Метод определяет строковое представление объекта."""
+        return f"{self.title}"
+
+    class Meta:
+        """Клас который добавляет метаданные к модели Course."""
+
+        verbose_name = "Курс"
+        verbose_name_plural = "Курсы"
+        ordering = ["title"]
+        db_table = "courses"
