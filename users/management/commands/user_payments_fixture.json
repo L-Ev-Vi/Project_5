@@ -1,0 +1,46 @@
+[
+{
+    "model": "users.user",
+    "pk": 1,
+    "fields": {
+        "password": "",
+        "last_login": null,
+        "is_superuser": false,
+        "first_name": "John",
+        "last_name": "Doe",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-04-22T15:31:05.747Z",
+        "email": "john.doe@example.com",
+        "phone_number": null,
+        "city": null,
+        "avatar": "",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.payments",
+    "pk": 1,
+    "fields": {
+        "user": 1,
+        "date": "2026-04-22",
+        "course": 1,
+        "lesson": null,
+        "amount": "10000.00",
+        "method": "translation"
+    }
+},
+{
+    "model": "users.payments",
+    "pk": 2,
+    "fields": {
+        "user": 1,
+        "date": "2027-05-23",
+        "course": null,
+        "lesson": 1,
+        "amount": "5000.00",
+        "method": "cash"
+    }
+}
+]

@@ -11,9 +11,11 @@ router.register(r"users", views.UserViewSet, basename="users")
 app_name = UsersConfig.name
 
 urlpatterns = [
-    # path("users/", views.UserListViewAPI.as_view(), name="users"),
-    # path("users/create/", views.UserCreateViewAPI.as_view(), name="users_create"),
-    # path("users/retrieve/<int:pk>/", views.UserRetrieveViewAPI.as_view(), name="users_retrieve"),
+    #Payments
+    path("payments/", views.PaymentsListViewAPI.as_view(), name="payments"),
+    path("payments/create/", views.PaymentsCreateViewAPI.as_view(), name="payments_create"),
+    path("payments/retrieve/<int:pk>/", views.PaymentsRetrieveViewAPI.as_view(), name="payments_retrieve"),
+
     # path("users/update/<int:pk>/", views.UserUpdateViewAPI.as_view(), name="users_update"),
     # path("users/destroy/<int:pk>/", views.UserDestroyViewAPI.as_view(), name="users_destroy"),
 ] + router.urls

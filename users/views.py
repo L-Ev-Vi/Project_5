@@ -1,40 +1,48 @@
 from rest_framework import generics, viewsets
 
-from .models import User
-from .serializers import UserSerializer
+from .models import User, Payments
+from .serializers import UserSerializer, PaymentsSerializer, RetrieveUserSerializer
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import OrderingFilter
 
+# Users
 
 class UserViewSet(viewsets.ModelViewSet):
     """Класс описывающий логику обработки HTTP запросов"""
-
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+    def get_serializer_class(self):
+        if self.action in ("list", "retrieve"):
+            return RetrieveUserSerializer
+        return UserSerializer
 
-# class UserCreateViewAPI(generics.CreateAPIView):
-#     """Класс отвечает за создание сущности (Урока)"""
-#     serializer_class = UserSerializer
-#
-#
-# class UserListViewAPI(generics.ListAPIView):
-#     """Класс отвечает за отображение списка сущностей (Уроков)"""
-#     serializer_class = UserSerializer
-#     queryset = User.objects.all()
-#
-#
-# class UserRetrieveViewAPI(generics.RetrieveAPIView):
-#     """Класс отвечает за отображение одной сущности (Урока)"""
-#     serializer_class = UserSerializer
-#     queryset = User.objects.all()
-#
-#
-# class UserUpdateViewAPI(generics.UpdateAPIView):
-#     """Класс отвечает за редактирование одной сущности (Урока)"""
-#     serializer_class = UserSerializer
-#     queryset = User.objects.all()
-#
-#
-# class UserDestroyViewAPI(generics.DestroyAPIView):
-#     """Класс отвечает за удаление сущности (Урока)"""
-#     serializer_class = UserSerializer
-#     queryset = User.objects.all()
+    # def list(self, request, *args, **kwargs):
+    #     self.serializer_class = RetrieveUserSerializer
+    #     return super().list(request, *args, **kwargs)
+    #
+    # def retrieve(self, request, *args, **kwargs):
+    #     self.serializer_class = RetrieveUserSerializer
+    #     return super().retrieve(request, *args, **kwargs)
+
+
+# Payments
+
+class PaymentsCreateViewAPI(generics.CreateAPIView):
+    """Класс отвечает за создание сущности (Платёж)"""
+    serializer_class = PaymentsSerializer
+
+
+class PaymentsListViewAPI(generics.ListAPIView):
+    """Класс отвечает за отображение списка сущностей (Платёж)"""
+    serializer_class = PaymentsSerializer
+    queryset = Payments.objects.all()
+    filter_backends = [DjangoFilterBackend, OrderingFilter,]
+    ordering_fields = ("date",)
+    filterset_fields = ("course", "lesson", "method",)
+
+
+class PaymentsRetrieveViewAPI(generics.RetrieveAPIView):
+    """Класс отвечает за отображение одной сущности (Платёж)"""
+    serializer_class = PaymentsSerializer
+    queryset = Payments.objects.all()
