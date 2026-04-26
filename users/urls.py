@@ -1,6 +1,7 @@
 from django.urls import path
+from rest_framework.permissions import AllowAny
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework.routers import DefaultRouter
-
 from users import views
 
 from .apps import UsersConfig
@@ -16,6 +17,7 @@ urlpatterns = [
     path("payments/create/", views.PaymentsCreateViewAPI.as_view(), name="payments_create"),
     path("payments/retrieve/<int:pk>/", views.PaymentsRetrieveViewAPI.as_view(), name="payments_retrieve"),
 
-    # path("users/update/<int:pk>/", views.UserUpdateViewAPI.as_view(), name="users_update"),
-    # path("users/destroy/<int:pk>/", views.UserDestroyViewAPI.as_view(), name="users_destroy"),
+    #User
+    path('users/token/', TokenObtainPairView.as_view(permission_classes = (AllowAny,)), name='token_obtain_pair'),
+    path('users/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ] + router.urls

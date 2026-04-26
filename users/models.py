@@ -39,7 +39,7 @@ class Payments(models.Model):
         ("translation", "Перевод"),
     ]
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models. CASCADE,
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.CASCADE,
                              related_name="payments", verbose_name="Пользователь")
     date = models.DateField(auto_now_add=True, verbose_name="Дата оплаты")
     course = models.ForeignKey(Course, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Курс")

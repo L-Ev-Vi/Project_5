@@ -1,0 +1,148 @@
+[
+{
+    "model": "auth.group",
+    "pk": 1,
+    "fields": {
+        "name": "Модераторы",
+        "permissions": [
+            30,
+            32,
+            26,
+            28
+        ]
+    }
+},
+{
+    "model": "users.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$mv1LHxOH8cvuTLmHtYWu1e$O42HQ8a+GwqN3kAFdNOroz1Irb/6TGwPbbUTgijPukI=",
+        "last_login": "2026-04-26T08:08:23.040Z",
+        "is_superuser": true,
+        "first_name": "Admin",
+        "last_name": "Admine",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2026-04-26T08:06:56.189Z",
+        "email": "admin@mail.ru",
+        "phone_number": null,
+        "city": null,
+        "avatar": "",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.user",
+    "pk": 2,
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$MOCrqLYdZcxEckUxQSf9YK$8sC4MA0SOkW4ofNHz75/bV4uVh4niuuQoO5TI33N4zE=",
+        "last_login": null,
+        "is_superuser": false,
+        "first_name": "",
+        "last_name": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2026-04-25T19:31:43Z",
+        "email": "tom@doe.ru",
+        "phone_number": null,
+        "city": null,
+        "avatar": "",
+        "groups": [
+            1
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.user",
+    "pk": 3,
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$QfSsfBuSXSFv7cxOeVzWwT$0N3zdVFl6/1m3GFaQSSYUTLEyE+Jh6gBas3fc5oo4e8=",
+        "last_login": null,
+        "is_superuser": false,
+        "first_name": "",
+        "last_name": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-04-26T13:23:03.096Z",
+        "email": "jon@doe.ru",
+        "phone_number": null,
+        "city": null,
+        "avatar": "",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "materials.lesson",
+    "pk": 1,
+    "fields": {
+        "title": "Introduction to Programming",
+        "description": "A comprehensive guide to learning the basics of programming.",
+        "picture": "",
+        "link_to_video": null,
+        "author": 3
+    }
+},
+{
+    "model": "materials.lesson",
+    "pk": 2,
+    "fields": {
+        "title": "Introduction",
+        "description": "Basics",
+        "picture": "",
+        "link_to_video": null,
+        "author": 3
+    }
+},
+{
+    "model": "materials.course",
+    "pk": 1,
+    "fields": {
+        "title": "Programming",
+        "picture": "",
+        "description": "This is a new course",
+        "author": 3,
+        "lesson": [
+            1, 2
+        ]
+    }
+},
+{
+    "model": "users.payments",
+    "pk": 1,
+    "fields": {
+        "user": 3,
+        "date": "2026-04-26",
+        "course": null,
+        "lesson": 1,
+        "amount": "1000.00",
+        "method": "translation"
+    }
+},
+{
+    "model": "users.payments",
+    "pk": 2,
+    "fields": {
+        "user": 3,
+        "date": "2026-04-26",
+        "course": 1,
+        "lesson": null,
+        "amount": "2000.00",
+        "method": "translation"
+    }
+},
+{
+    "model": "users.payments",
+    "pk": 3,
+    "fields": {
+        "user": 3,
+        "date": "2026-04-26",
+        "course": null,
+        "lesson": 2,
+        "amount": "1000.00",
+        "method": "cash"
+    }
+}
+]

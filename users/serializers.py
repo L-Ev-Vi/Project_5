@@ -8,7 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("id", "first_name", "last_name", "email", "phone_number", "city",)
+        fields = "__all__"
 
 
 class PaymentsSerializer(serializers.ModelSerializer):
@@ -27,3 +27,11 @@ class RetrieveUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ("id", "first_name", "last_name", "email", "phone_number", "city", "payments",)
+
+
+class GeneralInformationUserSerializer(serializers.ModelSerializer):
+    """Сериализаторы определяющий представление API"""
+
+    class Meta:
+        model = User
+        fields = ("id", "first_name", "email", "city",)
