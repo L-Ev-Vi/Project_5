@@ -1,19 +1,18 @@
-from rest_framework import viewsets, generics
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from .models import User, Payments
-from .serializers import (UserSerializer,
-                          PaymentsSerializer,
-                          RetrieveUserSerializer,
-                          GeneralInformationUserSerializer)
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import generics, viewsets
 from rest_framework.filters import OrderingFilter
-from .permissions import UserIsObjPermissions, UserInObjOrPermissions
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
+from .models import Payments, User
+from .permissions import UserInObjPermissions, UserIsObjPermissions
+from .serializers import GeneralInformationUserSerializer, PaymentsSerializer, RetrieveUserSerializer, UserSerializer
 
 # Users
 
+
 class UserViewSet(viewsets.ModelViewSet):
     """Класс описывающий логику обработки HTTP запросов"""
+
     queryset = User.objects.all()
 
     def get_serializer_class(self):
@@ -43,8 +42,10 @@ class UserViewSet(viewsets.ModelViewSet):
 
 # Payments
 
+
 class PaymentsCreateViewAPI(generics.CreateAPIView):
     """Класс отвечает за создание сущности (Платёж)"""
+
     serializer_class = PaymentsSerializer
 
     def perform_create(self, serializer):
@@ -55,12 +56,19 @@ class PaymentsCreateViewAPI(generics.CreateAPIView):
 
 class PaymentsListViewAPI(generics.ListAPIView):
     """Класс отвечает за отображение списка сущностей (Платёж)"""
+
     serializer_class = PaymentsSerializer
-    queryset = Payments.objects.all()
     permission_classes = [IsAuthenticated]
-    filter_backends = [DjangoFilterBackend, OrderingFilter,]
+    filter_backends = [
+        DjangoFilterBackend,
+        OrderingFilter,
+    ]
     ordering_fields = ("date",)
-    filterset_fields = ("course", "lesson", "method",)
+    filterset_fields = (
+        "course",
+        "lesson",
+        "method",
+    )
 
     def get_queryset(self):
         queryset = Payments.objects.filter(user=int(self.request.user.pk))
@@ -69,6 +77,7 @@ class PaymentsListViewAPI(generics.ListAPIView):
 
 class PaymentsRetrieveViewAPI(generics.RetrieveAPIView):
     """Класс отвечает за отображение одной сущности (Платёж)"""
+
     serializer_class = PaymentsSerializer
     queryset = Payments.objects.all()
-    permission_classes = [IsAuthenticated, UserInObjOrPermissions]
+    permission_classes = [IsAuthenticated, UserInObjPermissions]

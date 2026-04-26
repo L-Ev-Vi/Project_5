@@ -12,9 +12,7 @@ class CourseAdmin(admin.ModelAdmin):
         "title",
     )
     list_filter = ("title",)
-    search_fields = (
-        "title",
-    )
+    search_fields = ("title",)
 
 
 @admin.register(Lesson)
@@ -26,6 +24,4 @@ class LessonAdmin(admin.ModelAdmin):
         "title",
     )
     list_filter = ("title",)
-    search_fields = (
-        "title",
-    )
+    search_fields = ("title",)

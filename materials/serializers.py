@@ -39,7 +39,10 @@ class LessonListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Lesson
-        fields = ("id", "title",)
+        fields = (
+            "id",
+            "title",
+        )
 
 
 class CourseListSerializer(serializers.ModelSerializer):
@@ -49,7 +52,11 @@ class CourseListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ("id", "title", "lessons",)
+        fields = (
+            "id",
+            "title",
+            "lessons",
+        )
 
     def get_lessons(self, instance):
         """Определяем количество уроков в курсе"""

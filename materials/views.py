@@ -1,17 +1,26 @@
 from rest_framework import generics, viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from .permissions import UserIsModeratorPermissions, UserInObjOrModeratorPermissions
+
 from .models import Course, Lesson
-from .serializers import (CourseSerializer,
-                          LessonSerializer,
-                          LessonListSerializer,
-                          CourseListSerializer,
-                          CreateCourseSerializer)
+from .permissions import UserInObjOrModeratorPermissions, UserIsAuthorPermissions, UserIsModeratorPermissions
+from .serializers import (
+    CourseListSerializer,
+    CourseSerializer,
+    CreateCourseSerializer,
+    LessonListSerializer,
+    LessonSerializer,
+)
 
 
 class CourseViewSet(viewsets.ModelViewSet):
     """Класс описывающий логику обработки HTTP запросов"""
-    queryset = Course.objects.all()
+
+    def get_queryset(self):
+        if self.action == "list":
+            if self.request.user.groups.filter(name="Модераторы").exists():
+                return Course.objects.all()
+            return Course.objects.filter(author=int(self.request.user.pk))
+        return Course.objects.all()
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -22,8 +31,8 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         """Создает экземпляр и возвращает список разрешений, необходимых для этого представления."""
-        if self.action == "list":
-            permission_classes = [AllowAny]
+        if self.action == "retrieve":
+            permission_classes = [IsAuthenticated, UserIsAuthorPermissions | UserIsModeratorPermissions]
         elif self.action == "create":
             permission_classes = [IsAuthenticated, ~UserIsModeratorPermissions]
         elif self.action in ("update", "partial_update", "destroy"):
@@ -40,6 +49,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
 class LessonCreateViewAPI(generics.CreateAPIView):
     """Класс отвечает за создание сущности (Урока)"""
+
     permission_classes = [IsAuthenticated, ~UserIsModeratorPermissions]
     serializer_class = LessonSerializer
 
@@ -51,19 +61,28 @@ class LessonCreateViewAPI(generics.CreateAPIView):
 
 class LessonListViewAPI(generics.ListAPIView):
     """Класс отвечает за отображение списка сущностей (Уроков)"""
+
     permission_classes = [AllowAny]
     serializer_class = LessonListSerializer
     queryset = Lesson.objects.all()
 
+    def get_queryset(self):
+        if self.request.user.groups.filter(name="Модераторы").exists():
+            return Lesson.objects.all()
+        return Lesson.objects.filter(author=int(self.request.user.pk))
+
 
 class LessonRetrieveViewAPI(generics.RetrieveAPIView):
     """Класс отвечает за отображение одной сущности (Урока)"""
+
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
+    permission_classes = [UserIsAuthorPermissions | UserIsModeratorPermissions]
 
 
 class LessonUpdateViewAPI(generics.UpdateAPIView):
     """Класс отвечает за редактирование одной сущности (Урока)"""
+
     permission_classes = [UserInObjOrModeratorPermissions]
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
@@ -71,6 +90,7 @@ class LessonUpdateViewAPI(generics.UpdateAPIView):
 
 class LessonDestroyViewAPI(generics.DestroyAPIView):
     """Класс отвечает за удаление сущности (Урока)"""
+
     permission_classes = [UserInObjOrModeratorPermissions]
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()

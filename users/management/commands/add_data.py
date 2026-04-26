@@ -1,9 +1,10 @@
+from django.contrib.auth.models import Group
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django.db import connection
-from django.contrib.auth.models import Group
-from users.models import User, Payments
-from materials.models import Lesson, Course
+
+from materials.models import Course, Lesson
+from users.models import Payments, User
 
 
 class Command(BaseCommand):
@@ -36,11 +37,16 @@ class Command(BaseCommand):
         call_command(
             "loaddata",
             "users/management/commands/user_payments_groups_lesson_course_fixture.json",
-            "--ignorenonexistent")
+            "--ignorenonexistent",
+        )
 
-        self.stdout.write(self.style.SUCCESS('id=1 "Администратор" {"email": "admin@mail.ru", "password": "1234"}\n'
-                                             'id=2 "Модератор" {"email": "tom@doe.ru", "password": "123asd"}\n'
-                                             'id=3 "Пользователь" {"email": "jon@doe.ru", "password": "456"}\n'))
+        self.stdout.write(
+            self.style.SUCCESS(
+                'id=1 "Администратор" {"email": "admin@mail.ru", "password": "1234"}\n'
+                'id=2 "Модератор" {"email": "tom@doe.ru", "password": "123asd"}\n'
+                'id=3 "Пользователь" {"email": "jon@doe.ru", "password": "456"}\n'
+            )
+        )
 
         # id=1
         # Администратор
@@ -49,14 +55,12 @@ class Command(BaseCommand):
         #     "password": "1234"
         # }
 
-
         # id=2
         # Модератор
         # {
         #     "email": "tom@doe.ru",
         #     "password": "123asd"
         # }
-
 
         # id=3
         # Пользователь
