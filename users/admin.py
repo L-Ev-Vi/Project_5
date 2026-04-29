@@ -8,6 +8,7 @@ class UserOfServiceAdmin(admin.ModelAdmin):
     """Класс регистрации и настройки отображения модели 'User' в админке"""
 
     list_display = (
+        "pk",
         "email",
         "first_name",
         "last_name",

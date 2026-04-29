@@ -33,6 +33,9 @@ django-phonenumber-field = "^8.4.0"
 phonenumbers = "^9.0.28"
 django-cleanup = "^9.0.0"
 django-filter = "^25.2"
+djangorestframework-simplejwt = "^5.5.1"
+types-django-filter = "^25.2.0.20260408"
+djangorestframework-stubs = {extras = ["compatible-mypy"], version = "^3.16.9"}
 
 [tool.mypy]
 disallow_untyped_defs = true

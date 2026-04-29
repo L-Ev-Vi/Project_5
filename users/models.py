@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
+
 from config import settings
 from materials.models import Course, Lesson
 
@@ -39,8 +40,14 @@ class Payments(models.Model):
         ("translation", "Перевод"),
     ]
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models. CASCADE,
-                             related_name="payments", verbose_name="Пользователь")
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="payments",
+        verbose_name="Пользователь",
+    )
     date = models.DateField(auto_now_add=True, verbose_name="Дата оплаты")
     course = models.ForeignKey(Course, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Курс")
     lesson = models.ForeignKey(Lesson, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Курс")
@@ -49,8 +56,10 @@ class Payments(models.Model):
 
     def __str__(self):
         """Метод определяет строковое представление объекта."""
-        return (f"{self.user.first_name} {self.user.last_name} - "
-                f"{self.course.title if self.course else self.lesson.title} - {self.amount}")
+        return (
+            f"{self.user.first_name} {self.user.last_name} - "
+            f"{self.course.title if self.course else self.lesson.title} - {self.amount}"
+        )
 
     class Meta:
         """Добавление метаданных к модели Payments."""
