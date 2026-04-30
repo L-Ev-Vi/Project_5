@@ -1,7 +1,9 @@
 from rest_framework import generics, viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
-
+from rest_framework.response import Response
+from users.models import Subscriptions
 from .models import Course, Lesson
+from .paginators import MyPagination
 from .permissions import UserInObjOrModeratorPermissions, UserIsAuthorPermissions, UserIsModeratorPermissions
 from .serializers import (
     CourseListSerializer,
@@ -14,6 +16,8 @@ from .serializers import (
 
 class CourseViewSet(viewsets.ModelViewSet):
     """Класс описывающий логику обработки HTTP запросов"""
+
+    pagination_class = MyPagination
 
     def get_queryset(self):
         if self.action == "list":
@@ -46,6 +50,18 @@ class CourseViewSet(viewsets.ModelViewSet):
         new_course.author = self.request.user
         new_course.save()
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+
+    # def retrieve(self, request, *args, **kwargs):
+    #     instance = self.get_object()
+    #     serializer = self.get_serializer(instance)
+    #     data = serializer.data
+    #     data["subscriptions"] = Subscriptions.objects.get(course=instance.pk, user=self.request.user.pk).subscription
+    #     return Response(data)
+
 
 class LessonCreateViewAPI(generics.CreateAPIView):
     """Класс отвечает за создание сущности (Урока)"""
@@ -65,6 +81,7 @@ class LessonListViewAPI(generics.ListAPIView):
     permission_classes = [AllowAny]
     serializer_class = LessonListSerializer
     queryset = Lesson.objects.all()
+    pagination_class = MyPagination
 
     def get_queryset(self):
         if self.request.user.groups.filter(name="Модераторы").exists():

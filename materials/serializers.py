@@ -1,5 +1,6 @@
 from rest_framework import serializers
-
+from .validators import CheckingVideoLink
+from users.models import Subscriptions
 from .models import Course, Lesson
 
 
@@ -9,6 +10,7 @@ class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
         fields = "__all__"
+        validators = [CheckingVideoLink("video")]
 
 
 class CourseSerializer(serializers.ModelSerializer):
@@ -16,6 +18,7 @@ class CourseSerializer(serializers.ModelSerializer):
 
     lessons = serializers.SerializerMethodField()
     lesson = LessonSerializer(many=True)
+    subscriptions = serializers.SerializerMethodField()
 
     class Meta:
         model = Course
@@ -24,6 +27,12 @@ class CourseSerializer(serializers.ModelSerializer):
     def get_lessons(self, instance):
         """Определяем количество уроков в курсе"""
         return instance.lesson.all().count()
+
+    def get_subscriptions(self, instance):
+        user = self.context['request'].user
+        if Subscriptions.objects.get(course=instance.pk, user=user.pk):
+            return Subscriptions.objects.get(course=instance.pk, user=user.pk).subscription
+        return False
 
 
 class CreateCourseSerializer(serializers.ModelSerializer):

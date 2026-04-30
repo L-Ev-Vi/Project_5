@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
+from django.utils import timezone
 
 from config import settings
 from materials.models import Course, Lesson
@@ -68,3 +69,27 @@ class Payments(models.Model):
         verbose_name_plural = "Платежи"
         ordering = ["-date"]
         db_table = "payments"
+
+
+class Subscriptions(models.Model):
+    """Класс определяющий модель подписки"""
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name="user_subscriptions",
+                             verbose_name="Пользователь")
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True,
+                               related_name="course_subscriptions", verbose_name="Курс")
+    subscription = models.BooleanField(default=True, verbose_name="Признак подписки")
+
+    def __str__(self):
+        """Метод определяет строковое представление объекта."""
+        return (
+            f"{self.user.first_name} {self.user.last_name} - {self.course.title}"
+        )
+
+    class Meta:
+        """Добавление метаданных к модели Subscriptions."""
+
+        verbose_name = "Подписка"
+        verbose_name_plural = "Подписки"
+        ordering = ["user"]
+        db_table = "subscriptions"

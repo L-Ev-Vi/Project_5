@@ -1,3 +1,5 @@
-from django.test import TestCase
+from django.utils import timezone
 
-# Create your tests here.
+current_datetime = timezone.localtime(timezone.now()).date()
+
+print(current_datetime)
