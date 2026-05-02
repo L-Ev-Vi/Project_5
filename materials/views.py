@@ -1,7 +1,5 @@
 from rest_framework import generics, viewsets
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.response import Response
-from users.models import Subscriptions
+from rest_framework.permissions import IsAuthenticated
 from .models import Course, Lesson
 from .paginators import MyPagination
 from .permissions import UserInObjOrModeratorPermissions, UserIsAuthorPermissions, UserIsModeratorPermissions
@@ -55,13 +53,6 @@ class CourseViewSet(viewsets.ModelViewSet):
         context['request'] = self.request
         return context
 
-    # def retrieve(self, request, *args, **kwargs):
-    #     instance = self.get_object()
-    #     serializer = self.get_serializer(instance)
-    #     data = serializer.data
-    #     data["subscriptions"] = Subscriptions.objects.get(course=instance.pk, user=self.request.user.pk).subscription
-    #     return Response(data)
-
 
 class LessonCreateViewAPI(generics.CreateAPIView):
     """Класс отвечает за создание сущности (Урока)"""
@@ -78,7 +69,7 @@ class LessonCreateViewAPI(generics.CreateAPIView):
 class LessonListViewAPI(generics.ListAPIView):
     """Класс отвечает за отображение списка сущностей (Уроков)"""
 
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     serializer_class = LessonListSerializer
     queryset = Lesson.objects.all()
     pagination_class = MyPagination

@@ -107,5 +107,5 @@ class SubscriptionseViewAPI(APIView):
             sub.save()
         else:
             Subscriptions.objects.create(course=course, user=user)
-            message = "Подписка включена!"
+            message = "Подписка отключена!"
         return Response({"message": message})

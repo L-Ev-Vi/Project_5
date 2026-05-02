@@ -30,9 +30,9 @@ class CourseSerializer(serializers.ModelSerializer):
 
     def get_subscriptions(self, instance):
         user = self.context['request'].user
-        if Subscriptions.objects.get(course=instance.pk, user=user.pk):
-            return Subscriptions.objects.get(course=instance.pk, user=user.pk).subscription
-        return False
+        if Subscriptions.objects.filter(user=user.pk, course=instance.pk).exists():
+            return Subscriptions.objects.get(user=user.pk, course=instance.pk).subscription
+        return Subscriptions.objects.create(user=user, course=instance).subscription
 
 
 class CreateCourseSerializer(serializers.ModelSerializer):

@@ -31,7 +31,7 @@ class RetrieveUserSerializer(serializers.ModelSerializer):
     """Сериализаторы определяющий представление API"""
 
     payments = PaymentsSerializer(many=True)
-    subscriptions = SubscriptionsSerializer(many=True)
+    subscriptions = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -45,6 +45,10 @@ class RetrieveUserSerializer(serializers.ModelSerializer):
             "payments",
             "subscriptions"
         )
+
+    def get_subscriptions(self, instance):
+        subscriptions = instance.user_subscriptions.all()
+        return subscriptions
 
 
 class GeneralInformationUserSerializer(serializers.ModelSerializer):

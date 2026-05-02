@@ -8,8 +8,10 @@ class CheckingVideoLink:
         self.field = field
 
     def __call__(self, value):
-        pattern = re.compile(r'youtube.com')
+        pattern = re.compile(r'youtube\.com')
         sentence = dict(value).get(self.field)
-        matches = pattern.search(sentence)
-        if not matches:
-            raise ValidationError("Ссылка на видео материал должен вести только на хостинг YouTube!")
+        if sentence:
+            matches = pattern.search(sentence)
+            if not matches:
+                raise ValidationError("Ссылка на видео материал должен вести только на хостинг YouTube!")
+

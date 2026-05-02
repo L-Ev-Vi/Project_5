@@ -78,7 +78,7 @@ class Subscriptions(models.Model):
                              verbose_name="Пользователь")
     course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True,
                                related_name="course_subscriptions", verbose_name="Курс")
-    subscription = models.BooleanField(default=True, verbose_name="Признак подписки")
+    subscription = models.BooleanField(default=False, verbose_name="Признак подписки")
 
     def __str__(self):
         """Метод определяет строковое представление объекта."""

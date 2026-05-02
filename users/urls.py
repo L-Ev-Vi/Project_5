@@ -15,11 +15,11 @@ app_name = UsersConfig.name
 urlpatterns = [
     # Payments
     path("payments/", views.PaymentsListViewAPI.as_view(), name="payments"),
-    path("payments/create/", views.PaymentsCreateViewAPI.as_view(), name="payments_create"),
-    path("payments/retrieve/<int:pk>/", views.PaymentsRetrieveViewAPI.as_view(), name="payments_retrieve"),
+    path("payments/create/", views.PaymentsCreateViewAPI.as_view(), name="payments-create"),
+    path("payments/retrieve/<int:pk>/", views.PaymentsRetrieveViewAPI.as_view(), name="payments-retrieve"),
     # Subscriptions
     path("sub/", views.SubscriptionseViewAPI.as_view(), name="subscriptions"),
     # User
     path("users/token/", TokenObtainPairView.as_view(permission_classes=(AllowAny,)), name="token_obtain_pair"),
-    path("users/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("users/token/refresh/", TokenRefreshView.as_view(), name="token-refresh"),
 ] + router.urls
