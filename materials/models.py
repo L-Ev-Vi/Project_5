@@ -9,7 +9,7 @@ class Lesson(models.Model):
     title = models.CharField(max_length=200, verbose_name="Название Урока")
     description = models.TextField(blank=True, null=True, verbose_name="Описание")
     picture = models.ImageField(upload_to="picture/", blank=True, null=True, verbose_name="Превью")
-    link_to_video = models.URLField(max_length=500, null=True, blank=True, verbose_name="Ссылка на видео")
+    video = models.URLField(max_length=500, null=True, blank=True, verbose_name="Ссылка на видео")
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         null=True,

@@ -1,7 +1,7 @@
 from rest_framework import generics, viewsets
-from rest_framework.permissions import AllowAny, IsAuthenticated
-
+from rest_framework.permissions import IsAuthenticated
 from .models import Course, Lesson
+from .paginators import MyPagination
 from .permissions import UserInObjOrModeratorPermissions, UserIsAuthorPermissions, UserIsModeratorPermissions
 from .serializers import (
     CourseListSerializer,
@@ -14,6 +14,8 @@ from .serializers import (
 
 class CourseViewSet(viewsets.ModelViewSet):
     """Класс описывающий логику обработки HTTP запросов"""
+
+    pagination_class = MyPagination
 
     def get_queryset(self):
         if self.action == "list":
@@ -46,6 +48,11 @@ class CourseViewSet(viewsets.ModelViewSet):
         new_course.author = self.request.user
         new_course.save()
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+
 
 class LessonCreateViewAPI(generics.CreateAPIView):
     """Класс отвечает за создание сущности (Урока)"""
@@ -62,9 +69,10 @@ class LessonCreateViewAPI(generics.CreateAPIView):
 class LessonListViewAPI(generics.ListAPIView):
     """Класс отвечает за отображение списка сущностей (Уроков)"""
 
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     serializer_class = LessonListSerializer
     queryset = Lesson.objects.all()
+    pagination_class = MyPagination
 
     def get_queryset(self):
         if self.request.user.groups.filter(name="Модераторы").exists():

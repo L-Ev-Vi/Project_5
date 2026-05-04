@@ -23,9 +23,12 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_cleanup.apps.CleanupConfig",
+
     "rest_framework",
+
     "django_filters",
     "rest_framework_simplejwt",
+
     "users",
     "materials",
 ]

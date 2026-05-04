@@ -12,8 +12,8 @@ app_name = MaterialsConfig.name
 
 urlpatterns = [
     path("lessons/", views.LessonListViewAPI.as_view(), name="lessons"),
-    path("lesson/create/", views.LessonCreateViewAPI.as_view(), name="lesson_create"),
-    path("lesson/retrieve/<int:pk>/", views.LessonRetrieveViewAPI.as_view(), name="lesson_retrieve"),
-    path("lesson/update/<int:pk>/", views.LessonUpdateViewAPI.as_view(), name="lesson_update"),
-    path("lesson/destroy/<int:pk>/", views.LessonDestroyViewAPI.as_view(), name="lesson_destroy"),
+    path("lesson/create/", views.LessonCreateViewAPI.as_view(), name="lesson-create"),
+    path("lesson/retrieve/<int:pk>/", views.LessonRetrieveViewAPI.as_view(), name="lesson-retrieve"),
+    path("lesson/update/<int:pk>/", views.LessonUpdateViewAPI.as_view(), name="lesson-update"),
+    path("lesson/destroy/<int:pk>/", views.LessonDestroyViewAPI.as_view(), name="lesson-destroy"),
 ] + router.urls

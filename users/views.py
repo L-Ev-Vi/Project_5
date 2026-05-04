@@ -1,9 +1,13 @@
+from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, viewsets
 from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from materials.models import Course
 
-from .models import Payments, User
+from .models import Payments, User, Subscriptions
 from .permissions import UserInObjPermissions, UserIsObjPermissions
 from .serializers import GeneralInformationUserSerializer, PaymentsSerializer, RetrieveUserSerializer, UserSerializer
 
@@ -81,3 +85,27 @@ class PaymentsRetrieveViewAPI(generics.RetrieveAPIView):
     serializer_class = PaymentsSerializer
     queryset = Payments.objects.all()
     permission_classes = [IsAuthenticated, UserInObjPermissions]
+
+
+# Subscriptions
+
+class SubscriptionseViewAPI(APIView):
+    """Создание и удаление подписки."""
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        course = get_object_or_404(Course, pk=request.data.get("course"))
+        subs_course = [sub.course for sub in user.user_subscriptions.all()]
+        if course in subs_course:
+            sub = Subscriptions.objects.get(course=course.pk, user=user.pk)
+            if sub.subscription:
+                sub.subscription = False
+                message = "Подписка отключена!"
+            else:
+                sub.subscription = True
+                message = "Подписка включена!"
+            sub.save()
+        else:
+            Subscriptions.objects.create(course=course, user=user)
+            message = "Подписка отключена!"
+        return Response({"message": message})

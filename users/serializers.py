@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Payments, User
+from .models import Payments, User, Subscriptions
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -19,10 +19,19 @@ class PaymentsSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class SubscriptionsSerializer(serializers.ModelSerializer):
+    """Сериализаторы определяющий представление API"""
+
+    class Meta:
+        model = Subscriptions
+        fields = "__all__"
+
+
 class RetrieveUserSerializer(serializers.ModelSerializer):
     """Сериализаторы определяющий представление API"""
 
     payments = PaymentsSerializer(many=True)
+    subscriptions = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -34,7 +43,12 @@ class RetrieveUserSerializer(serializers.ModelSerializer):
             "phone_number",
             "city",
             "payments",
+            "subscriptions"
         )
+
+    def get_subscriptions(self, instance):
+        subscriptions = instance.user_subscriptions.all()
+        return subscriptions
 
 
 class GeneralInformationUserSerializer(serializers.ModelSerializer):
