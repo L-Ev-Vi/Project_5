@@ -1,7 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
-from django.utils import timezone
 
 from config import settings
 from materials.models import Course, Lesson
@@ -52,8 +51,9 @@ class Payments(models.Model):
     date = models.DateField(auto_now_add=True, verbose_name="Дата оплаты")
     course = models.ForeignKey(Course, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Курс")
     lesson = models.ForeignKey(Lesson, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Курс")
-    amount = models.DecimalField(decimal_places=2, max_digits=10, verbose_name="Сумма оплаты")
+    amount = models.DecimalField(decimal_places=2, max_digits=10, default=0, verbose_name="Сумма оплаты")
     method = models.CharField(choices=PAYMENT_METHOD, default="translation", verbose_name="Оценка")
+    session = models.JSONField(default=dict)
 
     def __str__(self):
         """Метод определяет строковое представление объекта."""
@@ -74,17 +74,27 @@ class Payments(models.Model):
 class Subscriptions(models.Model):
     """Класс определяющий модель подписки"""
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name="user_subscriptions",
-                             verbose_name="Пользователь")
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True,
-                               related_name="course_subscriptions", verbose_name="Курс")
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="user_subscriptions",
+        verbose_name="Пользователь",
+    )
+    course = models.ForeignKey(
+        Course,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="course_subscriptions",
+        verbose_name="Курс",
+    )
     subscription = models.BooleanField(default=False, verbose_name="Признак подписки")
 
     def __str__(self):
         """Метод определяет строковое представление объекта."""
-        return (
-            f"{self.user.first_name} {self.user.last_name} - {self.course.title}"
-        )
+        return f"{self.user.first_name} {self.user.last_name} - {self.course.title}"
 
     class Meta:
         """Добавление метаданных к модели Subscriptions."""

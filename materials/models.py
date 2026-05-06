@@ -18,6 +18,7 @@ class Lesson(models.Model):
         related_name="lessons",
         verbose_name="Пользователь",
     )
+    price = models.DecimalField(decimal_places=2, max_digits=10, default=0, verbose_name="Стоимость в рублях")
 
     def __str__(self) -> str:
         """Метод определяет строковое представление объекта."""
@@ -47,6 +48,7 @@ class Course(models.Model):
         related_name="courses",
         verbose_name="Пользователь",
     )
+    price = models.DecimalField(decimal_places=2, max_digits=10, default=0, verbose_name="Стоимость в рублях")
 
     def __str__(self) -> str:
         """Метод определяет строковое представление объекта."""

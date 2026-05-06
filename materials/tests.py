@@ -1,9 +1,11 @@
+from django.contrib.auth.models import Group
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
+
 from users.models import User
-from .models import Lesson, Course
-from django.contrib.auth.models import Group
+
+from .models import Course, Lesson
 
 
 class LessonAPITestCase(APITestCase):
@@ -35,8 +37,9 @@ class LessonAPITestCase(APITestCase):
         response = self.client.post(url, error_video)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-        self.assertEqual(response.json()["non_field_errors"],
-                         ["Ссылка на видео материал должен вести только на хостинг YouTube!"])
+        self.assertEqual(
+            response.json()["non_field_errors"], ["Ссылка на видео материал должен вести только на хостинг YouTube!"]
+        )
 
         self.user.groups.add(self.moderators)
         self.client.force_authenticate(user=self.user)
@@ -170,7 +173,15 @@ class CourseAPITestCase(APITestCase):
 
         data = {"title": "Test1", "description": "Text test1"}
         error_data = {}
-        body = {'id': 2, 'title': 'Test1', 'picture': None, 'description': 'Text test1', 'author': 1, 'lesson': []}
+        body = {
+            "id": 2,
+            "title": "Test1",
+            "picture": None,
+            "description": "Text test1",
+            "author": 1,
+            "lesson": [],
+            "price": "0.00",
+        }
 
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -214,8 +225,17 @@ class CourseAPITestCase(APITestCase):
         """Тестирование получения курса."""
 
         url = reverse("materials:course-detail", args=[self.course.pk])
-        body = {'id': 5, 'title': 'Test', 'lessons': 0, 'picture': None, 'description': 'Text test', 'author': 5,
-                'lesson': [], "subscriptions": False}
+        body = {
+            "id": 5,
+            "title": "Test",
+            "lessons": 0,
+            "picture": None,
+            "description": "Text test",
+            "author": 5,
+            "lesson": [],
+            "subscriptions": False,
+            "price": "0.00",
+        }
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)

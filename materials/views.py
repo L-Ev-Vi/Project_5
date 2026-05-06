@@ -1,5 +1,6 @@
 from rest_framework import generics, viewsets
 from rest_framework.permissions import IsAuthenticated
+
 from .models import Course, Lesson
 from .paginators import MyPagination
 from .permissions import UserInObjOrModeratorPermissions, UserIsAuthorPermissions, UserIsModeratorPermissions
@@ -50,7 +51,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        context['request'] = self.request
+        context["request"] = self.request
         return context
 
 

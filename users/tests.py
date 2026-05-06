@@ -1,11 +1,13 @@
 import datetime
 
+from django.contrib.auth.models import Group
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from users.models import User, Payments, Subscriptions
-from .models import Lesson, Course
-from django.contrib.auth.models import Group
+
+from users.models import Payments, Subscriptions, User
+
+from .models import Course, Lesson
 
 
 class UserAPITestCase(APITestCase):
@@ -63,7 +65,7 @@ class UserAPITestCase(APITestCase):
 
         self.assertEqual(len(response.json()), 1)
 
-        self.assertEqual(response.json()[0]['email'], user.email)
+        self.assertEqual(response.json()[0]["email"], user.email)
 
     def test_retrieve(self):
         """Тестирование получения данных пользователя."""
@@ -78,14 +80,14 @@ class UserAPITestCase(APITestCase):
 
         self.assertEqual(response.json()["email"], self.user.email)
 
-        self.assertEqual(response.json().get('email'), self.user.email)
+        self.assertEqual(response.json().get("email"), self.user.email)
 
         user = User.objects.create(email="tom@world.com", password="123")
         self.client.force_authenticate(user=user)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.assertEqual(response.json().get('email'), self.user.email)
+        self.assertEqual(response.json().get("email"), self.user.email)
 
         self.client.force_authenticate(user=None)
         response = self.client.get(url)
@@ -99,7 +101,7 @@ class UserAPITestCase(APITestCase):
 
         url = reverse("users:users-detail", args=[self.user.pk])
 
-        data = {'city': 'Инсар'}
+        data = {"city": "Инсар"}
         error_data = {}
 
         response = self.client.patch(url, data)
@@ -158,8 +160,8 @@ class PaymentsAPITestCase(APITestCase):
 
         url = reverse("users:payments-create")
 
-        data_course = {"course": self.course.pk, "amount": 200}
-        data_lesson = {"course": self.lesson.pk, "amount": 300}
+        data_course = {"course": self.course.pk, "title": self.course.title}
+        data_lesson = {"lesson": self.lesson.pk, "title": self.lesson.title}
         error_data = {}
         error_amount = {"amount": ""}
 
@@ -167,13 +169,13 @@ class PaymentsAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         self.assertEqual(Payments.objects.all().count(), 1)
-        self.assertEqual(response.json()["amount"], "200.00")
+        self.assertEqual(response.json()["amount"], "0.00")
 
         response = self.client.post(url, data_lesson)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         self.assertEqual(Payments.objects.all().count(), 2)
-        self.assertEqual(response.json()["amount"], "300.00")
+        self.assertEqual(response.json()["amount"], "0.00")
 
         response = self.client.post(url, error_data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -191,8 +193,9 @@ class PaymentsAPITestCase(APITestCase):
         url = reverse("users:payments")
 
         self.payments_course = Payments.objects.create(user=self.user, course=self.course, amount=100, method="cash")
-        self.payments_lesson = Payments.objects.create(user=self.user, lesson=self.lesson, amount=200,
-                                                       method="translation")
+        self.payments_lesson = Payments.objects.create(
+            user=self.user, lesson=self.lesson, amount=200, method="translation"
+        )
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -240,13 +243,26 @@ class PaymentsAPITestCase(APITestCase):
     def test_retrieve(self):
         """Тестирование получения платежа."""
 
-        self.payments_course = Payments.objects.create(user=self.user, course=self.course, amount=100, method="cash")
+        self.payments_course = Payments.objects.create(
+            user=self.user,
+            course=self.course,
+            amount=100,
+            method="cash",
+            session={"id": "1", "payment_status": "paid", "url": "stripe"},
+        )
 
         url = reverse("users:payments-retrieve", args=[self.payments_course.pk])
 
-        body = {'id': 5, 'date': datetime.datetime.now().strftime('%Y-%m-%d'), 'amount': '100.00', 'method': 'cash',
-                'user': 19, 'course': 9,
-                'lesson': None}
+        body = {
+            "id": 5,
+            "date": datetime.datetime.now().strftime("%Y-%m-%d"),
+            "amount": "100.00",
+            "method": "cash",
+            "user": 19,
+            "course": 9,
+            "lesson": None,
+            "session": {"id": "1", "payment_status": "paid", "url": "stripe"},
+        }
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -256,7 +272,7 @@ class PaymentsAPITestCase(APITestCase):
         user = User.objects.create(email="tom@world.com", password="123")
         self.client.force_authenticate(user=user)
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
         self.client.force_authenticate(user=None)
         response = self.client.get(url)
@@ -280,16 +296,16 @@ class SubscriptionsAPITestCase(APITestCase):
         response = self.client.get(url_course_detail)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.assertFalse(response.json()['subscriptions'])
+        self.assertFalse(response.json()["subscriptions"])
 
         response = self.client.post(url, {"course": self.course.pk})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.assertEqual(response.json(), {'message': 'Подписка включена!'})
+        self.assertEqual(response.json(), {"message": "Подписка включена!"})
         self.assertTrue(Subscriptions.objects.get(user=self.user, course=self.course).subscription)
 
         response = self.client.post(url, {"course": self.course.pk})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        self.assertEqual(response.json(), {'message': 'Подписка отключена!'})
+        self.assertEqual(response.json(), {"message": "Подписка отключена!"})
         self.assertFalse(Subscriptions.objects.get(user=self.user, course=self.course).subscription)
