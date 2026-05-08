@@ -1,6 +1,7 @@
 from rest_framework import status
 from rest_framework.response import Response
 from stripe import StripeClient, error
+from rest_framework import exceptions
 
 from config import settings
 
@@ -49,6 +50,14 @@ class StripePayments:
             return Response({"error": e.error.message}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
         except error.StripeError as e:
             return Response({"error": e.error.message}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except exceptions.ValidationError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except exceptions.NotFound as e:
+            return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
+        except exceptions.MethodNotAllowed as e:
+            return Response({"error": str(e)}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @staticmethod
     def checkout_payment_status(id_session):
@@ -71,3 +80,11 @@ class StripePayments:
             return Response({"error": e.error.message}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
         except error.StripeError as e:
             return Response({"error": e.error.message}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except exceptions.ValidationError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except exceptions.NotFound as e:
+            return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
+        except exceptions.MethodNotAllowed as e:
+            return Response({"error": str(e)}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
