@@ -6,7 +6,7 @@ authors = [
     { name = "Evgenii_Lobachev", email = "lobachev9614@gmail.com" }
 ]
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.13,<4.0"
 dependencies = [
 ]
 
@@ -40,6 +40,10 @@ coverage = "^7.13.5"
 drf-yasg = "^1.21.15"
 stripe = "^15.1.0"
 django-cors-headers = "^4.9.0"
+celery = "^5.6.3"
+eventlet = "^0.41.0"
+django-celery-beat = "^2.9.0"
+redis = "^7.4.0"
 
 [tool.mypy]
 disallow_untyped_defs = true
