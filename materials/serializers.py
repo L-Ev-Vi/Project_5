@@ -1,7 +1,9 @@
 from rest_framework import serializers
-from .validators import CheckingVideoLink
+
 from users.models import Subscriptions
+
 from .models import Course, Lesson
+from .validators import CheckingVideoLink
 
 
 class LessonSerializer(serializers.ModelSerializer):
@@ -29,7 +31,7 @@ class CourseSerializer(serializers.ModelSerializer):
         return instance.lesson.all().count()
 
     def get_subscriptions(self, instance):
-        user = self.context['request'].user
+        user = self.context["request"].user
         if Subscriptions.objects.filter(user=user.pk, course=instance.pk).exists():
             return Subscriptions.objects.get(user=user.pk, course=instance.pk).subscription
         return Subscriptions.objects.create(user=user, course=instance).subscription

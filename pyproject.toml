@@ -37,6 +37,9 @@ djangorestframework-simplejwt = "^5.5.1"
 types-django-filter = "^25.2.0.20260408"
 djangorestframework-stubs = {extras = ["compatible-mypy"], version = "^3.16.9"}
 coverage = "^7.13.5"
+drf-yasg = "^1.21.15"
+stripe = "^15.1.0"
+django-cors-headers = "^4.9.0"
 
 [tool.mypy]
 disallow_untyped_defs = true

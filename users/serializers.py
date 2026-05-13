@@ -1,6 +1,7 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
-from .models import Payments, User, Subscriptions
+from .models import Payments, Subscriptions, User
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -17,6 +18,12 @@ class PaymentsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payments
         fields = "__all__"
+
+    def validate(self, data):
+        """Проверка заполнения полей курс и урок"""
+        if data.get("course") is None and data.get("lesson") is None:
+            raise ValidationError("Необходимо выбрать курс или урок!")
+        return data
 
 
 class SubscriptionsSerializer(serializers.ModelSerializer):
@@ -35,16 +42,7 @@ class RetrieveUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = (
-            "id",
-            "first_name",
-            "last_name",
-            "email",
-            "phone_number",
-            "city",
-            "payments",
-            "subscriptions"
-        )
+        fields = ("id", "first_name", "last_name", "email", "phone_number", "city", "payments", "subscriptions")
 
     def get_subscriptions(self, instance):
         subscriptions = instance.user_subscriptions.all()
