@@ -19,6 +19,7 @@ class Lesson(models.Model):
         verbose_name="Пользователь",
     )
     price = models.DecimalField(decimal_places=2, max_digits=10, default=0, verbose_name="Стоимость в рублях")
+    update_at = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
         """Метод определяет строковое представление объекта."""
@@ -49,6 +50,7 @@ class Course(models.Model):
         verbose_name="Пользователь",
     )
     price = models.DecimalField(decimal_places=2, max_digits=10, default=0, verbose_name="Стоимость в рублях")
+    update_at = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
         """Метод определяет строковое представление объекта."""

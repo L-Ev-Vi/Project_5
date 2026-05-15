@@ -44,7 +44,7 @@
         "is_staff": true,
         "is_active": true,
         "date_joined": "2026-04-25T19:31:43Z",
-        "email": "tom@doe.ru",
+        "email": "evgeny.lobacheow@yandex.ru",
         "phone_number": null,
         "city": null,
         "avatar": "",
@@ -66,7 +66,7 @@
         "is_staff": false,
         "is_active": true,
         "date_joined": "2026-04-26T13:23:03.096Z",
-        "email": "jon@doe.ru",
+        "email": "lobachev9614@gmail.com",
         "phone_number": null,
         "city": null,
         "avatar": "",
@@ -81,19 +81,23 @@
         "title": "Introduction to Programming",
         "description": "A comprehensive guide to learning the basics of programming.",
         "picture": "",
-        "link_to_video": null,
-        "author": 3
+        "video": null,
+        "author": 3,
+        "price": "2000.00",
+        "update_at": "2026-05-14T20:25:51.605Z"
     }
 },
 {
     "model": "materials.lesson",
     "pk": 2,
     "fields": {
-        "title": "Introduction",
-        "description": "Basics",
+        "title": "Add a new lessen",
+        "description": "New lesson",
         "picture": "",
-        "link_to_video": null,
-        "author": 3
+        "video": "https://www.youtube.com/watch?v=P6QHswl2PqE",
+        "author": 3,
+        "price": "0.00",
+        "update_at": "2026-05-14T20:25:51.605Z"
     }
 },
 {
@@ -104,8 +108,11 @@
         "picture": "",
         "description": "This is a new course",
         "author": 3,
+        "price": "1000.00",
+        "update_at": "2026-05-14T20:25:51.575Z",
         "lesson": [
-            1, 2
+            2,
+            1
         ]
     }
 },
@@ -118,7 +125,8 @@
         "course": null,
         "lesson": 1,
         "amount": "1000.00",
-        "method": "translation"
+        "method": "translation",
+        "session": {}
     }
 },
 {
@@ -130,7 +138,8 @@
         "course": 1,
         "lesson": null,
         "amount": "2000.00",
-        "method": "translation"
+        "method": "translation",
+        "session": {}
     }
 },
 {
@@ -142,7 +151,17 @@
         "course": null,
         "lesson": 2,
         "amount": "1000.00",
-        "method": "cash"
+        "method": "cash",
+        "session": {}
+    }
+},
+{
+    "model": "users.subscriptions",
+    "pk": 1,
+    "fields": {
+        "user": 2,
+        "course": 1,
+        "subscription": true
     }
 }
 ]

@@ -161,9 +161,9 @@ EMAIL_BACKEND = os.getenv("EMAIL_BACKEND")
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
-# CELERY_BEAT_SCHEDULE = {
-#     'task-name': {
-#         'task': 'vehicle.tasks.search',
-#         'schedule': timedelta(minutes=5),
-#     },
-# }
+CELERY_BEAT_SCHEDULE = {
+    "checking_course_changes": {
+        "task": "materials.tasks.checking_course_changes",
+        "schedule": timedelta(hours=4),
+    },
+}

@@ -11,6 +11,7 @@ from .serializers import (
     LessonListSerializer,
     LessonSerializer,
 )
+from .tasks import sending_emails
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -53,6 +54,10 @@ class CourseViewSet(viewsets.ModelViewSet):
         context = super().get_serializer_context()
         context["request"] = self.request
         return context
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        sending_emails.delay(instance.id)
 
 
 class LessonCreateViewAPI(generics.CreateAPIView):
