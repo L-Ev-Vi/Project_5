@@ -1,9 +1,14 @@
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.response import Response
 from stripe import StripeClient, error
 from rest_framework import exceptions
+from .models import User
 
 from config import settings
+from .tasks import blocking
+
+from datetime import timedelta
 
 client = StripeClient(settings.STRIPE_API_KEY)
 
@@ -88,3 +93,31 @@ class StripePayments:
             return Response({"error": str(e)}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+def checking_last_login_date():
+    """Выборка пользователей по дате входа более 30 дней"""
+    print(User.objects.filter(is_active=True).count())
+    blocking_list = []
+    users = User.objects.filter(is_active=True)
+    thirty_days = timedelta(days=30)
+    current_datetime = timezone.localtime(timezone.now())
+    for user in users:
+        if user.is_superuser or user.is_staff or user.groups.filter(name="Модераторы").exists():
+            continue
+        else:
+            if user.last_login is None:
+                if (current_datetime - user.date_joined) > thirty_days:
+                    blocking_list.append(user.pk)
+            elif (current_datetime - user.last_login) > thirty_days:
+                blocking_list.append(user.pk)
+    if blocking_list:
+        blocking.delay(blocking_list)
+
+
+def blocking_user(users):
+    """Блокировка пользователя с помощью флага is_active"""
+    for user_pk in users:
+        user = User.objects.get(pk=user_pk)
+        user.is_active = False
+        user.save()

@@ -52,5 +52,3 @@ def checking_changes():
                 message = f"Курс '{course.title}' не обновлялся более 4-х часов!"
                 email = course.author.email
                 sending_notification(message, email)
-
-

@@ -7,6 +7,6 @@ def sending_emails(course_id):
     newsletter_about_exposure(course_id)
 
 
-@shared_task
+@shared_task()
 def checking_course_changes():
     checking_changes()

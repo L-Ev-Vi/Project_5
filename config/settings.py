@@ -120,6 +120,7 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "UPDATE_LAST_LOGIN": True,
 }
 
 
@@ -159,11 +160,3 @@ EMAIL_USE_TLS = True if os.getenv("EMAIL_USE_TLS") == "True" else False
 EMAIL_USE_SSL = True if os.getenv("EMAIL_USE_SSL") == "True" else False
 EMAIL_BACKEND = os.getenv("EMAIL_BACKEND")
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-
-
-CELERY_BEAT_SCHEDULE = {
-    "checking_course_changes": {
-        "task": "materials.tasks.checking_course_changes",
-        "schedule": timedelta(hours=4),
-    },
-}
