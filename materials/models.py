@@ -40,7 +40,7 @@ class Course(models.Model):
     title = models.CharField(max_length=100, verbose_name="Название курса")
     picture = models.ImageField(upload_to="picture/", blank=True, null=True, verbose_name="Превью")
     description = models.TextField(blank=True, null=True, verbose_name="Описание")
-    lesson = models.ManyToManyField(Lesson, blank=True, related_name="lessons", verbose_name="Уроки")
+    lesson = models.ManyToManyField(Lesson, blank=True, related_name="courses", verbose_name="Уроки")
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         null=True,

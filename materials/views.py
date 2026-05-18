@@ -11,7 +11,7 @@ from .serializers import (
     LessonListSerializer,
     LessonSerializer,
 )
-from .tasks import sending_emails
+from .tasks import newsletter_about_updates
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -57,7 +57,8 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         instance = serializer.save()
-        sending_emails.delay(instance.id)
+        id = instance.id
+        newsletter_about_updates.delay(id, "course")
 
 
 class LessonCreateViewAPI(generics.CreateAPIView):
@@ -100,6 +101,11 @@ class LessonUpdateViewAPI(generics.UpdateAPIView):
     permission_classes = [UserInObjOrModeratorPermissions]
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        id = instance.id
+        newsletter_about_updates.delay(id, "lesson")
 
 
 class LessonDestroyViewAPI(generics.DestroyAPIView):
